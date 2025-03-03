@@ -1,0 +1,57 @@
+<% layout ("layouts/boilerplatecode.ejs") -%>
+<body>
+    <form method="post" nctype="multipart/form-data" action ="/listings/ <%= listing._id %>?_method=put" ></form>
+    <h1>Edit your listing</h1>
+    <form action="/listings" method="post" enctype="multipart/form-data" novalidate class="needs-validation">
+
+      <div class="mb-3">
+        <label for="tietle" class="form-label">Tittle</label>
+        <input required type="text" class="form-control" value="<%= listing.title %>" name="listing[title]" placeholder="title">
+        <div class="valid-feedback">Tittle looks good</div>
+    </div>
+        <br>
+       
+
+        <br>
+        <div>
+            <label for="description" class="form-label">Description</label>
+            <input class="form-control" required type="text" value="<%= listing.description %>" name="listing[description]" placeholder="description">
+            <div class="invalid-feedback">Write short descreption</div>
+        </div>
+       
+        <div class="mb-3">
+          <div class="mb-3">
+            Orignal listings Image <br>
+            <img src="<%= orignalImageUrl %>" />
+  
+          </div>
+            <label for="image" class="form-label"> Upload New Image Link</label>
+            <input name="listing[image]"  type="file" class="form-control">
+        </div>
+        
+        
+        <br>
+        <div class="row">
+        <div class="mb-3 col-md-4">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" required  class="form-control" value= "<%= listing.price %>" name="listing[price]" placeholder="price">
+            <div class="invalid-feedback">Enter Valid Price</div>
+        </div>
+        <div class="mb-3 col-md-8">
+            <label for="Location" class="form-label">Location</label>
+            <input type="text"  required  class="form-control" value="<%= listing.location %>" name="listing[location]" placeholder="location">
+            <div class="invalid-feedback">Enter Valid Location</div>
+        </div>
+        </div>
+
+        <br>
+        <br>
+        <div> <label for="countyu" class="form-label">Country</label>
+            <input type="text" required  class="form-control" value="<%= listing.country %>" name="listing[country]" placeholder="country">
+            <div class="invalid-feedback">Enter Valid Countery</div>
+        </div>
+        <br>
+        <br>
+        <button type="edit" class="btn btn-dark add-btn" >Edit</button>
+    </form>
+    <script src="/js/script"></script>
