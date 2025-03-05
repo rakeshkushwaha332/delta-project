@@ -7,6 +7,14 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    username: {
+        type: String,
+        required: true,
+    },
+    mobileNumber: {
+        type: Number,
+    },
+    
 });
 
 userSchema.plugin(passportLocalMongoose);
