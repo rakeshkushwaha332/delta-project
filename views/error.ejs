@@ -1,5 +1,19 @@
-<% layout ("/layouts/boilerplatecode") %>
+<% layout("layouts/boilerplatecode") %>
 
-<div class="row">
-    <div class="alert alert-danger col-6 offset-3" role="alert">A simple danger</div>
+<div class="row mt-5">
+  <div class="col-6 offset-3">
+    <div class="alert alert-danger text-center" role="alert">
+      <h4 class="alert-heading">Oops! Something went wrong.</h4>
+      <p>
+        <%= err.message || "An unexpected error occurred. Please try again later." %>
+      </p>
+      <% if (err.statusCode) { %>
+        <hr />
+        <p class="mb-0">Error Code: <%= err.statusCode %></p>
+      <% } %>
+    </div>
+    <div class="text-center mt-3">
+      <a href="/listings" class="btn btn-outline-dark">Back to Listings</a>
+    </div>
+  </div>
 </div>

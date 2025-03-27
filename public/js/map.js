@@ -1,24 +1,25 @@
+// public/js/map.js
 
-    // Set Mapbox access token
-    mapboxgl.accessToken = "<%= process.env.MAP_TOKEN %>";
+// Set your token here if you're not injecting via EJS (in production you might want to expose it securely)
+mapboxgl.accessToken = mapTokenFromServer || 'YOUR_PUBLIC_MAPBOX_TOKEN';
 
-    // // Parse the listing's location coordinates (assuming listing.location is a string like "lng,lat")
-    // const coordinates = "<%= listing.location %>".split(',').map(Number);
+// Read coordinates from the DOM (provided via data attributes)
+const mapContainer = document.getElementById('map');
+const lng = mapContainer.dataset.lng;
+const lat = mapContainer.dataset.lat;
 
-    // Initialize the map
+// Parse coordinates and validate
+if (lng && lat) {
     const map = new mapboxgl.Map({
-    container: 'map',
-    center: {lng: 77.5946, lat: 12.9716},  // ✅ Pass valid coordinates.
-    zoom: 12
-});
+        container: 'map',
+        center: [parseFloat(lng), parseFloat(lat)],
+        zoom: 12,
+        style: 'mapbox://styles/mapbox/streets-v11'
+    });
 
-
-    // // Add a marker for the listing's location
-    // new mapboxgl.Marker()
-    //     .setLngLat(coordinates)
-
-          // Create a default Marker and add it to the map.
-    const marker = new mapboxgl.Marker()
-    .setLngLat(coordinates)
-    .addTo(map);
-
+    new mapboxgl.Marker()
+        .setLngLat([parseFloat(lng), parseFloat(lat)])
+        .addTo(map);
+} else {
+    console.error("Map coordinates not provided.");
+}

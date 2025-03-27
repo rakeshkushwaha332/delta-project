@@ -1,95 +1,67 @@
+const User = require("../models/user");
+const logger = require("../logger");
 
-const User = require("../models/user")
-
-
-
+// Helper to generate a unique mobile number
+function generateUniqueMobileNumber() {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 10000);
+    return `${timestamp}${randomNum}`;
+}
 
 module.exports.renderSignupForm = (req, res) => {
     res.render("users/signup.ejs");
 };
 
-
-module.exports.renderLoginForm = async (req, res) => {
+module.exports.renderLoginForm = (req, res) => {
     res.render("users/login.ejs");
 };
 
-
-module.exports.login =  async (req, res) => {
+module.exports.login = (req, res) => {
+    logger.info("User logged in successfully");
     req.flash("success", "Welcome back to Wanderlust!");
-    const redirectUrl = res.locals.redirectUrl || "/listings"; // Use the saved URL or fallback
-    console.log("Redirecting to:", redirectUrl); // Debugging
-    delete req.session.redirectUrl; // Clear the redirect URL after use
+    const redirectUrl = res.locals.redirectUrl || "/listings";
+    if (req.session) {
+        delete req.session.redirectUrl;
+    }
     res.redirect(redirectUrl);
 };
 
-
-module.exports.logout =  (req, res, next) => {
+module.exports.logout = (req, res, next) => {
     req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
+        if (err) return next(err);
+        logger.info("User successfully logged out");
         req.flash("success", "You are logged out!");
         res.redirect("/listings");
     });
 };
 
-
-
-
-
-
-
-
-
-
-
 module.exports.signup = async (req, res, next) => {
     const { username, email, password } = req.body;
+    const mobileNumber = generateUniqueMobileNumber();
 
-    // Function to generate a unique mobile number
-function generateUniqueMobileNumber() {
-    const timestamp = Date.now();  // Get current timestamp
-    const randomNum = Math.floor(Math.random() * 10000);  // Generate a random number (e.g., between 0 and 9999)
-    return `${timestamp}${randomNum}`;  // Combine timestamp and random number to create a unique mobile number
-}
+    try {
+        logger.info(`Signup attempt: ${email}`);
 
-const mobileNumber = generateUniqueMobileNumber();
-    try {   
-        // Log received data
-        console.log("Received data: username =", username, "email =", email);
+        const newUser = new User({ email, username, mobileNumber });
 
-        // Create a new user
-        const newUser = new User({ email, username, mobileNumber});
+        const registeredUser = await User.register(newUser, password);
 
-        try {
-            // Register the user using passport-local-mongoose
-            const registeredUser = await User.register(newUser, password);
-            console.log("User registered successfully:", email);
+        req.login(registeredUser, (err) => {
+            if (err) {
+                logger.error("Login after signup failed:", err);
+                return next(err);
+            }
 
-            // Auto-login after signup
-            req.login(registeredUser, (err) => {
-                if (err) {
-                    console.log("Error during login:", err.message);
-                    return next(err);
-                }
-
-                // Log successful login
-                console.log("User logged in successfully:", email);
-                req.flash("success", "Welcome to Wanderlust!");
-
-                // Redirect to the saved URL or fallback to "/listings"
-                const redirectUrl = req.session.redirectUrl || "/listings"; // Use the saved URL or fallback
-                delete req.session.redirectUrl; // Clear the redirect URL after use
-                console.log("Redirecting to:", redirectUrl);
-
-                res.redirect(redirectUrl);
-            });
-        } catch (registerErr) {
-            console.log("Error registering user:", registerErr.message);
-            return next(registerErr);
-        }
+            logger.info("Signup and login successful");
+            req.flash("success", "Welcome to Wanderlust!");
+            const redirectUrl = req.session?.redirectUrl || "/listings";
+            if (req.session) {
+                delete req.session.redirectUrl;
+            }
+            res.redirect(redirectUrl);
+        });
     } catch (err) {
-        console.log("Error in signup process:", err.message);
-        return next(err);
+        logger.error("Signup failed:", err.message);
+        next(err);
     }
 };
