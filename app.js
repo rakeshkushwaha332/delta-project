@@ -16,6 +16,7 @@ const LocalStrategy = require("passport-local");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const logger = require('./logger');
 
+
 // Mapbox setup
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });

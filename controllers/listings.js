@@ -132,3 +132,30 @@ module.exports = {
     }
   }
 };
+// Add this to your existing listing controller
+
+const searchListings = async (req, res) => {
+  const { q } = req.query;
+  
+  if (!q) {
+    return res.redirect("/listings");
+  }
+  
+  const searchQuery = {
+    $or: [
+      { title: { $regex: q, $options: "i" } },
+      { location: { $regex: q, $options: "i" } },
+      { country: { $regex: q, $options: "i" } },
+      { description: { $regex: q, $options: "i" } }
+    ]
+  };
+  
+  const allListings = await Listing.find(searchQuery);
+  
+  res.render("listings/index", { 
+    allListings,
+    searchQuery: q 
+  });
+};
+
+module.exports.searchListings = searchListings;

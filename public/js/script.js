@@ -17,3 +17,27 @@
       }, false)
     })
   })()
+
+  // Wait for DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+  const searchForm = document.querySelector('form[role="search"]');
+  const searchInput = document.getElementById('searchInput');
+  
+  // Handle form submission
+  if (searchForm) {
+    searchForm.addEventListener('submit', function(e) {
+      // Only proceed if search input has value
+      if (!searchInput.value.trim()) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  }
+  
+  // Pre-fill search box with query if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('q');
+  if (searchQuery && searchInput) {
+    searchInput.value = searchQuery;
+  }
+});

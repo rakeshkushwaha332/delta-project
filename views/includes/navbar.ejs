@@ -1,13 +1,22 @@
 <style>
+  /* Base navbar styles */
+  .navbar {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    padding: 1rem 0; /* Increased padding for top and bottom */
+  }
+  
+  /* Search button styling */
   .search-btn {
     background-color: #fe424d;
     color: #fff;
     border-radius: 25px;
     padding: 0 1rem 0 1rem;
+    transition: background-color 0.2s;
   }
   
   .search-btn:hover {
-    background-color: #fe424d;
+    background-color: #e53c47;
     color: #fff;
   }
   
@@ -15,47 +24,160 @@
     display: inline;
     margin-right: 0.5rem;
   }
-
+  
+  /* Search input styling */
   .search-input {
     border-radius: 25px;
     padding: 0.5rem 3rem 0.5rem 3rem;
     font-size: 0.8rem;
+    border: 1px solid #e0e0e0;
+  }
+  
+  /* Search form container styling */
+  .search-container {
+    margin: 0.8rem 0; /* Add margin to top and bottom of the search form */
+  }
+  
+  /* Navbar dropdown menu styling */
+  .navbar-collapse {
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Mobile specific enhancements */
+  @media (max-width: 767.98px) {
+    .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 0;
+    }
+    
+    .navbar-nav {
+      padding: 1rem 0;
+    }
+    
+    .navbar-nav .nav-link {
+      padding: 0.8rem 1.5rem;
+      border-bottom: 1px solid #f1f1f1;
+      transition: background-color 0.2s;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .navbar-nav .nav-link:active {
+      background-color: #f0f0f0;
+    }
+    
+    /* Improve search form appearance on mobile */
+    form.d-flex {
+      padding: 1rem 1.5rem;
+      margin: 0.8rem 0; /* Add consistent margin on mobile too */
+      border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .search-input {
+      width: 100%;
+    }
   }
 </style>
 
-<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md navbar-light sticky-top">
   <div class="container-fluid">
     <!-- Brand/Logo -->
     <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
-
+    
     <!-- Toggle Button -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="navbarToggler">
       <span class="navbar-toggler-icon"></span>
     </button>
-
+    
     <!-- Navbar Links -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <!-- Left Side Links -->
       <div class="navbar-nav me-auto">
         <a class="nav-item nav-link" href="/listings">Explore</a>
       </div>
-
-      <!-- Search Form -->
-      <form class="d-flex" role="search">
-        <input class="form-control me-2 search-input" type="search" placeholder="Search" aria-label="Search">
+      
+      <form class="d-flex search-container" role="search" action="/listings/search" method="GET">
+        <input 
+          class="form-control me-2 search-input" 
+          type="search" 
+          placeholder="Search destinations" 
+          aria-label="Search"
+          name="q" 
+          id="searchInput"
+          required
+        >
         <button class="btn search-btn" type="submit">Search</button>
       </form>
-
+      
       <!-- Right Side Links -->
       <div class="navbar-nav ms-auto">
         <a class="nav-item nav-link" href="/listings/new">Airbnb your home</a>
         <% if(!currUser) { %>
-          <a class="nav-item nav-link" href="/signup"><b>SignUp</b> <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="/signup"><b>Sign Up</b></a>
           <a class="nav-item nav-link" href="/login"><b>Login</b></a>
-        <% } else if (currUser) { %>
+        <% } else { %>
           <a class="nav-item nav-link" href="/logout"><b>Logout</b></a>
         <% } %>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- Fixed Toggle Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarToggler = document.getElementById('navbarToggler');
+    const navbarCollapse = document.getElementById('navbarNavAltMarkup');
+    let isOpen = false;
+    
+    if (navbarToggler && navbarCollapse) {
+      // Properly toggle the menu
+      navbarToggler.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        isOpen = !isOpen;
+        
+        if (isOpen) {
+          navbarCollapse.classList.add('show');
+          navbarCollapse.style.display = 'block';
+        } else {
+          navbarCollapse.classList.remove('show');
+          setTimeout(function() {
+            navbarCollapse.style.display = '';
+          }, 200);
+        }
+      });
+      
+      // Close menu when clicking a link
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+          if (window.innerWidth < 768) {
+            navbarCollapse.classList.remove('show');
+            isOpen = false;
+          }
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (isOpen && 
+            !navbarCollapse.contains(e.target) && 
+            e.target !== navbarToggler &&
+            !navbarToggler.contains(e.target)) {
+          navbarCollapse.classList.remove('show');
+          isOpen = false;
+        }
+      });
+    }
+  });
+</script>

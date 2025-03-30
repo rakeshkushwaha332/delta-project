@@ -12,6 +12,9 @@ const upload = multer({ storage });
  * LISTING ROUTES
  * --------------------- */
 
+// IMPORTANT: Add the search route FIRST, before any routes with :id
+router.get("/search", wrapAsync(listingController.searchListings));
+
 // Get all listings & Create new
 router.route("/")
   .get(wrapAsync(listingController.index))
@@ -43,15 +46,12 @@ router.get(
   wrapAsync(listingController.renderEditForm)
 );
 
-// Add Review to listing (moved to controller)
+// Add Review to listing
 router.post(
   "/:id/reviews",
   isLoggedIn,
   wrapAsync(reviewController.createReview)
 );
-
-// Optional: Delete Review — if you support deleting from listing route
-// router.delete("/:id/reviews/:reviewId", isLoggedIn, wrapAsync(reviewController.destroyReview));
 
 /** ----------------------
  * TEST ROUTE (DEV ONLY)
