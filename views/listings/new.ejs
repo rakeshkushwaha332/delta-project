@@ -1,65 +1,82 @@
 <% layout("layouts/boilerplatecode.ejs") -%>
 
-<% if (locals.searchQuery) { %>
-  <div class="alert alert-info text-center">
-    Showing results for: "<%= searchQuery %>"
-    <a href="/listings" class="btn btn-sm btn-outline-dark ms-3">Clear</a>
-  </div>
-<% } %>
-
-<!-- Filter bar -->
-<div class="container-fluid my-3" id="filters">
-  <div class="d-flex flex-wrap justify-content-start gap-3">
-    <% const filters = [
-      { icon: 'fa-fire', label: 'Trending' },
-      { icon: 'fa-bed', label: 'Rooms' },
-      { icon: 'fa-mountain-city', label: 'Iconic Cities' },
-      { icon: 'fa-mountain', label: 'Mountains' },
-      { icon: 'fa-fort-awesome', label: 'Castles' },
-      { icon: 'fa-person-swimming', label: 'Amazing Pools' },
-      { icon: 'fa-campground', label: 'Camping' },
-      { icon: 'fa-cow', label: 'Farms' },
-      { icon: 'fa-snowflake', label: 'Arctic' },
-      { icon: 'fa-igloo', label: 'Domes' },
-      { icon: 'fa-ship', label: 'Boats' }
-    ]; %>
-
-    <% filters.forEach(filter => { %>
-      <div class="text-center">
-        <i class="fa-solid <%= filter.icon %> fs-5"></i>
-        <p class="mb-0 small"><%= filter.label %></p>
+<div class="row">
+  <div class="col-10 offset-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+    <h3 class="mt-3 mb-3">Create a New Listing</h3>
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          name="listing[title]"
+          placeholder="Add a catchy title"
+          type="text"
+          class="form-control"
+          required
+        />
+        <div class="valid-feedback">Title looks good!</div>
       </div>
-    <% }); %>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          name="listing[description]"
+          placeholder="Enter description"
+          class="form-control"
+          required
+        ></textarea>
+        <div class="invalid-feedback">Please enter a short description.</div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload Image</label>
+        <input
+          name="listing[image]"
+          type="file"
+          class="form-control"
+          required
+        />
+        <div class="invalid-feedback">Please upload a listing image.</div>
+      </div>
+
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="price" class="form-label">Price</label>
+          <input
+            name="listing[price]"
+            placeholder="e.g., 1200"
+            type="number"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter a valid price.</div>
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label for="country" class="form-label">Country</label>
+          <input
+            name="listing[country]"
+            placeholder="e.g., India"
+            type="text"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter the country name.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input
+          name="listing[location]"
+          placeholder="e.g., Goa"
+          type="text"
+          class="form-control"
+          required
+        />
+        <div class="invalid-feedback">Please enter the location.</div>
+      </div>
+
+      <button type="submit" class="btn btn-dark add-btn mt-3">Add</button>
+    </form>
   </div>
 </div>
-
-<!-- Listings Grid -->
-<div class="container-fluid px-md-3">
-  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-    <% for (let listing of allListings) { %>
-      <div class="col">
-        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
-          <div class="card h-100 shadow-sm">
-            <img src="<%= listing.image?.url || 'https://via.placeholder.com/300x200?text=No+Image' %>" class="card-img-top" style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1"><%= listing.title %></h6>
-              <p class="mb-0">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> / night</p>
-              <small class="text-muted tax-info d-none">+18% GST</small>
-            </div>
-          </div>
-        </a>
-      </div>
-    <% } %>
-  </div>
-</div>
-
-<script>
-  const taxSwitch = document.getElementById("flexSwitchCheckDefault");
-  if (taxSwitch) {
-    taxSwitch.addEventListener("click", () => {
-      document.querySelectorAll(".tax-info").forEach(el => {
-        el.classList.toggle("d-none");
-      });
-    });
-  }
-</script>

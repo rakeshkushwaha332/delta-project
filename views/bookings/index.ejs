@@ -1,0 +1,43 @@
+<% layout("layouts/boilerplatecode.ejs") -%>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <h3 class="mb-4">My Bookings</h3>
+
+      <% if (myBookings && myBookings.length > 0) { %>
+        <div class="list-group">
+          <% myBookings.forEach(booking => { %>
+            <div class="list-group-item list-group-item-action mb-3" aria-current="true">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><%= booking.listing.title %></h5>
+                <small>Booked on: <%= booking.createdAt.toDateString() %></small>
+              </div>
+              <p class="mb-1"><strong>Location:</strong> <%= booking.listing.location %>, <%= booking.listing.country %></p>
+              <p class="mb-1"><strong>Dates:</strong> <%= booking.checkInDate.toDateString() %> - <%= booking.checkOutDate.toDateString() %></p>
+              <p class="mb-1"><strong>Guests:</strong> <%= booking.guests %></p>
+              <p class="mb-1"><strong>Total Price:</strong> &#x20B9;<%= booking.totalPrice.toLocaleString("en-IN") %></p>
+              <p class="mb-1"><strong>Status:</strong> <%= booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1) %></p>
+              <% if (booking.guestName) { %>
+                 <p class="mb-1"><strong>Guest Name:</strong> <%= booking.guestName %></p>
+              <% } %>
+              <%# Add more booking details as needed %>
+              <small><a href="/listings/<%= booking.listing._id %>">View Listing</a></small>
+              
+              <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST" class="mt-2">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?');">Delete Booking</button>
+              </form>
+
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="alert alert-info" role="alert">
+          You have no bookings yet.
+        </div>
+      <% } %>
+
+      <a href="/listings" class="btn btn-primary mt-3">Browse Listings</a>
+    </div>
+  </div>
+</div> 

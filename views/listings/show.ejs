@@ -78,7 +78,9 @@
           <% } %>
         </div>
         
-        <a href="#" class="btn btn-danger w-100 mb-3 py-3">Book Now</a>
+        <form action="/listings/<%= listing._id %>/book" method="POST">
+          <button type="submit" class="btn btn-danger w-100 mb-3 py-3">Book Now</button>
+        </form>
         
         <!-- Edit and Delete Buttons -->
         <% if (currUser && listing.owner && String(listing.owner._id) === String(currUser._id)) { %>
@@ -211,38 +213,30 @@
   </div>
 </div>
 
-<!-- Map Integration -->
-<% if (typeof mapToken !== "undefined" && listing.geometry && Array.isArray(listing.geometry.coordinates) && listing.geometry.coordinates.length === 2) { %>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+<!-- Mapbox Script -->
+<script>
+  // Initialize map
+  mapboxgl.accessToken = '<%= mapToken %>';
+  
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: <%= JSON.stringify(listing.geometry.coordinates) %>,
+    zoom: 9
+  });
 
-  <script>
-    mapboxgl.accessToken = "<%= mapToken %>";
-    const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+  // Add navigation controls
+  map.addControl(new mapboxgl.NavigationControl());
 
-    if (Array.isArray(coordinates) && coordinates.length === 2 && !isNaN(coordinates[0]) && !isNaN(coordinates[1])) {
-      const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: coordinates,
-        zoom: 12
-      });
-
-      // Add marker with popup
-      new mapboxgl.Marker({
-        color: "#fe424d"
-      })
-      .setLngLat(coordinates)
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 })
-          .setHTML(`<h5 style="margin:0;"><%= listing.title %></h5><p style="margin:0;"><%= listing.location %></p>`)
-      )
-      .addTo(map);
-      
-      // Add navigation controls
-      map.addControl(new mapboxgl.NavigationControl());
-    } else {
-      console.error("Invalid coordinates:", coordinates);
-    }
-  </script>
-<% } %>
+  // Add marker
+  new mapboxgl.Marker()
+    .setLngLat(<%= JSON.stringify(listing.geometry.coordinates) %>)
+    .setPopup(
+      new mapboxgl.Popup({ offset: 25 })
+        .setHTML(
+          `<h3>${listing.title}</h3>
+           <p>${listing.location}, ${listing.country}</p>`
+        )
+    )
+    .addTo(map);
+</script>

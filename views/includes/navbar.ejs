@@ -85,6 +85,60 @@
       width: 100%;
     }
   }
+
+  /* Dropdown styling */
+  .dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem 0;
+    min-width: 200px;
+  }
+
+  .dropdown-header {
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .dropdown-header:first-child {
+    margin-top: 0;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #fe424d;
+    padding-left: 1.5rem;
+  }
+
+  .dropdown-divider {
+    margin: 0.5rem 0;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .btn-outline-secondary {
+    border-color: #e0e0e0;
+    color: #333;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #d0d0d0;
+    color: #fe424d;
+  }
 </style>
 
 <nav class="navbar navbar-expand-md navbar-light sticky-top">
@@ -115,11 +169,64 @@
           required
         >
         <button class="btn search-btn" type="submit">Search</button>
+
+        <div class="dropdown me-2">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+            <li><a class="dropdown-item" href="/listings?sort=price_asc">Price: Low to High</a></li>
+            <li><a class="dropdown-item" href="/listings?sort=price_desc">Price: High to Low</a></li>
+            <li><a class="dropdown-item" href="/listings?sort=rating_desc">Top Rated</a></li>
+            <li><a class="dropdown-item" href="/listings?sort=newest">Newest First</a></li>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+            <li><h6 class="dropdown-header">Price Range</h6></li>
+            <li><a class="dropdown-item" href="/listings?filter=price_0_100">$0 - $100</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=price_100_500">$100 - $500</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=price_500_plus">$500+</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Property Type</h6></li>
+            <li><a class="dropdown-item" href="/listings?filter=type_house">House</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=type_apartment">Apartment</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=type_villa">Villa</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=type_condo">Condo</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=type_cottage">Cottage</a></li>
+             <li><a class="dropdown-item" href="/listings?filter=type_cabin">Cabin</a></li>
+              <li><a class="dropdown-item" href="/listings?filter=type_studio">Studio</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Amenities</h6></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_wifi">WiFi</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_kitchen">Kitchen</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_pool">Pool</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_parking">Parking</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_air_conditioning">Air Conditioning</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_washer">Washer</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_dryer">Dryer</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_tv">TV</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_gym">Gym</a></li>
+            <li><a class="dropdown-item" href="/listings?filter=amenity_elevator">Elevator</a></li>
+             <li><a class="dropdown-item" href="/listings?filter=amenity_hot_tub">Hot Tub</a></li>
+              <li><a class="dropdown-item" href="/listings?filter=amenity_bbq_grill">BBQ Grill</a></li>
+               <li><a class="dropdown-item" href="/listings?filter=amenity_fireplace">Fireplace</a></li>
+                <li><a class="dropdown-item" href="/listings?filter=amenity_workspace">Workspace</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings?filter=rating_4_plus">4+ Star Rating</a></li>
+          </ul>
+        </div>
+
       </form>
       
       <!-- Right Side Links -->
       <div class="navbar-nav ms-auto">
         <a class="nav-item nav-link" href="/listings/new">Airbnb your home</a>
+        <a class="nav-item nav-link" href="/bookings">My Bookings</a>
         <% if(!currUser) { %>
           <a class="nav-item nav-link" href="/signup"><b>Sign Up</b></a>
           <a class="nav-item nav-link" href="/login"><b>Login</b></a>

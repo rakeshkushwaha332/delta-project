@@ -1,0 +1,65 @@
+<% layout("layouts/boilerplatecode.ejs") -%>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h3 class="mb-3">Book Your Stay at <%= listing.title %></h3>
+      <div class="card mb-4">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="<%= listing.image.url %>" class="card-img" alt="<%= listing.title %>">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><%= listing.title %></h5>
+              <p class="card-text"><%= listing.location %>, <%= listing.country %></p>
+              <p class="card-text"><strong>&#x20B9;<%= listing.price.toLocaleString("en-IN") %></strong> / night</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="bookingForm" action="/listings/<%= listing._id %>/initiate-payment" method="POST">
+        <h4>Booking Details</h4>
+        <div class="mb-3">
+          <label for="checkInDate" class="form-label">Check-in Date</label>
+          <input type="date" class="form-control" id="checkInDate" name="booking[checkInDate]" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="checkOutDate" class="form-label">Check-out Date</label>
+          <input type="date" class="form-control" id="checkOutDate" name="booking[checkOutDate]" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="guests" class="form-label">Number of Guests</label>
+          <input type="number" class="form-control" id="guests" name="booking[guests]" min="1" required>
+        </div>
+
+        <h4>Guest Information</h4>
+        <div class="mb-3">
+          <label for="guestName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="guestName" name="booking[guestName]" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="guestAge" class="form-label">Age</label>
+          <input type="number" class="form-control" id="guestAge" name="booking[guestAge]" min="1" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="guestSex" class="form-label">Sex</label>
+          <select class="form-select" id="guestSex" name="booking[guestSex]" required>
+            <option value="">Select Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <%# Payment initiation will happen after submitting this form %>
+        <button type="submit" class="btn btn-success mt-3">Proceed to Payment</button>
+      </form>
+    </div>
+  </div>
+</div> 

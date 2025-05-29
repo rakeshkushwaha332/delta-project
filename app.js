@@ -15,6 +15,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const logger = require('./logger');
+const bookingRouter = require("./routes/booking");
 
 
 // Mapbox setup
@@ -92,6 +93,7 @@ app.use((req, res, next) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/bookings", bookingRouter);
 
 // Home
 app.get("/", (req, res) => {

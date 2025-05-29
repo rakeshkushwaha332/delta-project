@@ -40,6 +40,16 @@ const listingSchema = new Schema({
         type: String,
         required: true
     },
+    propertyType: {
+        type: String,
+        enum: ['House', 'Apartment', 'Villa', 'Condo', 'Cottage', 'Cabin', 'Studio'],
+        required: true,
+        default: 'House'
+    },
+    amenities: [{
+        type: String,
+        enum: ['WiFi', 'Kitchen', 'Pool', 'Parking', 'Air Conditioning', 'Washer', 'Dryer', 'TV', 'Gym', 'Elevator', 'Hot Tub', 'BBQ Grill', 'Fireplace', 'Workspace']
+    }],
     reviews: [
         {
             type: Schema.Types.ObjectId,
@@ -61,7 +71,7 @@ const listingSchema = new Schema({
             required: false
         }
     }
-});
+}, { timestamps: true });
 
 const Listing = mongoose.model('Listing', listingSchema);
 module.exports = Listing;

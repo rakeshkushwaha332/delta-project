@@ -1,0 +1,76 @@
+<% layout("layouts/boilerplatecode.ejs") -%>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h3 class="mb-3">Complete Your Booking for <%= booking.listing.title %></h3>
+
+      <div class="card mb-4">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="<%= booking.listing.image.url %>" class="card-img" alt="<%= booking.listing.title %>">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><%= booking.listing.title %></h5>
+              <p class="card-text"><%= booking.listing.location %>, <%= booking.listing.country %></p>
+              <p class="card-text">Check-in: <%= booking.checkInDate.toDateString() %></p>
+              <p class="card-text">Check-out: <%= booking.checkOutDate.toDateString() %></p>
+              <p class="card-text">Guests: <%= booking.guests %></p>
+              <p class="card-text"><strong>Total Price: &#x20B9;<%= booking.totalPrice.toLocaleString("en-IN") %></strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4>Payment Information</h4>
+      <%# This is where you will integrate your payment gateway elements %>
+      <p>Payment form or elements will be loaded here.</p>
+      
+      <%# Example placeholder for a payment button (will be replaced by gateway logic) %>
+      <button class="btn btn-success mt-3" id="payButton">Pay Now</button>
+
+      <%# You will likely need script tags here for your payment gateway's SDK %>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const payButton = document.getElementById('payButton');
+  payButton.addEventListener('click', async () => {
+    // In a real application, you would interact with a payment gateway here.
+    // For this simulation, we'll send a request to a backend route
+    // to mark the booking as paid and show a success message.
+
+    const bookingId = "<%= booking._id %>"; // Get booking ID from EJS variable
+    const url = `/bookings/${bookingId}/confirm-payment`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Include CSRF token if using it
+        },
+        // You might send payment method details in the body in a real app
+        // body: JSON.stringify({ paymentMethodId: '...' })
+      });
+
+      if (response.ok) {
+        // Redirect to a success page
+        window.location.href = `/bookings/${bookingId}/success`;
+      } else {
+        // Handle errors (e.g., show an error message)
+        const errorData = await response.json();
+        console.error('Payment confirmation failed:', errorData);
+        alert('Payment failed. Please try again.'); // Simple alert for now
+      }
+
+    } catch (error) {
+      console.error('Error during payment confirmation:', error);
+      alert('An error occurred during payment. Please try again.'); // Simple alert for now
+    }
+
+  });
+</script> 

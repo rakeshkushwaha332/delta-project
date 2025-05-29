@@ -1,0 +1,36 @@
+<% layout("layouts/boilerplatecode.ejs") -%>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h3 class="mb-3 text-success">Booking Confirmed!</h3>
+
+      <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+          Booking Details
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><%= booking.listing.title %></h5>
+          <p class="card-text"><strong>Booking ID:</strong> <%= booking._id %></p>
+          <p class="card-text"><strong>Listing:</strong> <%= booking.listing.title %></p>
+          <p class="card-text"><strong>Location:</strong> <%= booking.listing.location %>, <%= booking.listing.country %></p>
+          <p class="card-text"><strong>Check-in:</strong> <%= booking.checkInDate.toDateString() %></p>
+          <p class="card-text"><strong>Check-out:</strong> <%= booking.checkOutDate.toDateString() %></p>
+          <p class="card-text"><strong>Guests:</strong> <%= booking.guests %></p>
+          <p class="card-text"><strong>Total Price:</strong> &#x20B9;<%= booking.totalPrice.toLocaleString("en-IN") %></p>
+          <p class="card-text"><strong>Payment Status:</strong> <%= booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1) %></p>
+          <% if (booking.guestName) { %>
+             <p class="card-text"><strong>Guest Name:</strong> <%= booking.guestName %></p>
+          <% } %>
+          <%# Add more booking details as needed %>
+        </div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        This is a fake payment slip for demonstration purposes.
+      </div>
+
+      <a href="/listings" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+  </div>
+</div> 
